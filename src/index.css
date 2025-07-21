@@ -1,0 +1,134 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  background-color: black !important;
+}
+
+.sidebar {
+  padding: 20px;
+  background-color: black;
+  font-size: 20px;
+}
+
+.sidebar button {
+  margin-bottom: 10px;
+  border: none;
+  background-color: black;
+  color: white;
+  padding: 5px;
+}
+
+.sidebar .btn-post {
+  background-color: white;
+  color: black;
+  width: 220px;
+  border-radius: 25px;
+  height: 50px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.suggest-username h2 {
+  font-size: 15px;
+  margin-bottom: 1px;
+  text-align: start;
+}
+
+.suggest-card {
+  max-width: 320px;
+}
+
+.suggest {
+  /* margin-left: 70%; */
+  /* Removed as Bootstrap grid handles positioning */
+  /* width: 350px; */
+  /* Removed as Bootstrap grid handles width */
+}
+
+.post-text h2 {
+  font-size: 15px;
+}
+
+.form-control::placeholder {
+  /* Chrome, Firefox, Opera, Safari 10.1+ */
+  color: white !important;
+  opacity: 1;
+  /* Firefox */
+}
+
+.postcard {
+  /* margin-right: 100px; */
+  /* Removed as Bootstrap grid handles positioning */
+}
+
+.post-action h1 {
+  font-size: 15px;
+}
+
+.create-action button {
+  width: 100px;
+}
+
+.category {
+  width: 250px;
+  padding: 20px;
+  background-color: black;
+  font-size: 20px;
+}
+
+.category button {
+  color: white;
+  background-color: black;
+  border: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+  padding: 10px 10px;
+  border-radius: 999px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.category button:hover {
+  background-color: #16181c;
+  color: white;
+  cursor: pointer;
+}
+
+
+.list-text h2 {
+  font-size: 12px;
+  opacity: 50%;
+}
+
+.list-text h1 {
+  font-size: 16px;
+}
+
+.sidebar button {
+  background: transparent;
+  color: white;
+  border: none;
+  text-align: left;
+  width: 100%;
+  font-size: 1rem;
+  border-radius: 999px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.sidebar button:hover {
+  background-color: #16181c;
+  color: white;
+  cursor: pointer;
+}
+
+.sidebar button.d-flex:hover {
+  background-color: #16181c;
+  border-radius: 999px;
+}
