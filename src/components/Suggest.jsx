@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
@@ -13,10 +13,8 @@ export default function Suggest() {
   const fetchFollowStatuses = async (userList) => {
     const results = await Promise.all(
       userList.map((user) =>
-        axios
-          .get(`http://localhost:3000/api/v1/users/${user.username}/follow-status`, {
-            withCredentials: true,
-          })
+        api
+          .get(`/users/${user.username}/follow-status`)
           .then((res) => ({
             username: user.username,
             status: res.data.status,
@@ -38,7 +36,7 @@ export default function Suggest() {
   };
 
   useEffect(() => {
-    axios.get("http://localhost:3000/api/v1/users").then((res) => {
+    api.get("/users").then((res) => {
       const filteredUsers = res.data.filter((u) => u.id !== currentUserId);
       setUsers(filteredUsers);
       fetchFollowStatuses(filteredUsers);
@@ -47,10 +45,9 @@ export default function Suggest() {
 
   const handleFollow = async (username) => {
     try {
-      const res = await axios.post(
-        `http://localhost:3000/api/v1/users/${username}/follow`,
-        {},
-        { withCredentials: true }
+      const res = await api.post(
+        `/users/${username}/follow`,
+        {}
       );
       Swal.fire({
         title: "Followed!",
@@ -74,10 +71,9 @@ export default function Suggest() {
 
   const handleAccept = async (username) => {
     try {
-      const res = await axios.put(
-        `http://localhost:3000/api/v1/users/${username}/follow/accept`,
-        {},
-        { withCredentials: true }
+      const res = await api.put(
+        `/users/${username}/follow/accept`,
+        {}
       );
       Swal.fire({
         title: "Accepted!",
@@ -158,10 +154,10 @@ export default function Suggest() {
 
                 <button
                   className={`mt-3 rounded-4 fw-bold border-0 ${isAcceptAction
-                      ? "bg-dark text-white"
-                      : isDisabled
-                        ? "bg-white text-dark"
-                        : "bg-dark text-white"
+                    ? "bg-dark text-white"
+                    : isDisabled
+                      ? "bg-white text-dark"
+                      : "bg-dark text-white"
                     }`}
                   style={{ width: "100px", height: "35px" }}
                   onClick={handleClick}

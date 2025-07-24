@@ -2,7 +2,7 @@ import { useState } from "react";
 import imgLogo from "../assets/xlogo.webp";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import Swal from "sweetalert2";
 import Cookies from "js-cookie";
 
@@ -21,8 +21,8 @@ export default function FormLogin() {
   const loginHandler = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/v1/auth/login",
+      const response = await api.post(
+        "/auth/login",
         {
           username,
           password,
@@ -36,9 +36,9 @@ export default function FormLogin() {
         showConfirmButton: false,
       });
 
-      Cookies.set("refresh_token", response.data.refresh_token, { expires: 7 });
-      Cookies.set("id", response.data.user.id);
-      
+      localStorage.setItem("refresh_token", response.data.refresh_token);
+      localStorage.setItem("id", response.data.user.id);
+
       navigate("/");
     } catch (error) {
       Swal.fire({

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import {
   MessageCircle,
   Repeat2,
@@ -11,11 +11,12 @@ import Cookies from "js-cookie";
 export default function PostFeed() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const userId = parseInt(Cookies.get("id"));
+  const userId = parseInt(localStorage.getItem("id"));
+  const token = localStorage.getItem("refresh_token");
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/v1/auth", { withCredentials: true })
+    api
+      .get("/auth")
       .catch((err) => {
         console.error("Gagal mengambil user login:", err);
       });
@@ -23,8 +24,8 @@ export default function PostFeed() {
 
   useEffect(() => {
     if (!userId) return;
-    axios
-      .get("http://localhost:3000/api/v1/posts", { withCredentials: true })
+    api
+      .get("/posts", { headers: { "Authorization": `Bearer ${token}` }, })
       .then((res) => {
         setPosts(res.data);
         setLoading(false);

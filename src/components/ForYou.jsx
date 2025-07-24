@@ -1,6 +1,6 @@
 import { MessageCircle, Repeat2, Heart, ChartNoAxesColumn } from "lucide-react";
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import Cookies from "js-cookie";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
@@ -14,8 +14,8 @@ export default function ForYou() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios
-      .get("http://localhost:3000/api/v1/posts", { withCredentials: true })
+    api
+      .get("/posts")
       .then((res) => {
         setPosts(res.data);
         setLoading(false);
@@ -24,7 +24,7 @@ export default function ForYou() {
   }, []);
 
   useEffect(() => {
-    axios.get("http://localhost:3000/api/v1/users").then((res) => {
+    api.get("/users").then((res) => {
       const filtered = res.data.filter((u) => u.id !== currentUserId);
       setUsers(filtered);
       fetchFollowStatuses(filtered);
@@ -34,10 +34,8 @@ export default function ForYou() {
   const fetchFollowStatuses = async (userList) => {
     const results = await Promise.all(
       userList.map((user) =>
-        axios
-          .get(`http://localhost:3000/api/v1/users/${user.username}/follow-status`, {
-            withCredentials: true,
-          })
+        api
+          .get(`/users/${user.username}/follow-status`)
           .then((res) => ({
             username: user.username,
             status: res.data.status,
@@ -59,10 +57,9 @@ export default function ForYou() {
 
   const handleFollow = async (username) => {
     try {
-      await axios.post(
-        `http://localhost:3000/api/v1/users/${username}/follow`,
-        {},
-        { withCredentials: true }
+      await api.post(
+        `/users/${username}/follow`,
+        {}
       );
       Swal.fire({
         title: "Followed!",
@@ -78,10 +75,9 @@ export default function ForYou() {
 
   const handleAccept = async (username) => {
     try {
-      await axios.put(
-        `http://localhost:3000/api/v1/users/${username}/follow/accept`,
-        {},
-        { withCredentials: true }
+      await api.put(
+        `/users/${username}/follow/accept`,
+        {}
       );
       Swal.fire({
         title: "Follow Accepted",
@@ -164,11 +160,10 @@ export default function ForYou() {
                     </div>
                   </button>
                   <button
-                    className={`mt-3 rounded-4 fw-bold border-0 ${
-                      isDisabled
+                    className={`mt-3 rounded-4 fw-bold border-0 ${isDisabled
                         ? "bg-white text-dark"
                         : "bg-dark text-white border border-light"
-                    }`}
+                      }`}
                     style={{ width: "100px", height: "35px" }}
                     onClick={handleClick}
                     disabled={isDisabled}

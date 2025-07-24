@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import { Modal, Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 
@@ -14,9 +14,8 @@ export default function Follow() {
   // Fetch jumlah followers & following
   const fetchFollowCounts = async () => {
     try {
-      const res = await axios.get(
-        `http://localhost:3000/api/v1/users/${username}/follow-count`,
-        { withCredentials: true }
+      const res = await api.get(
+        `/users/${username}/follow-count`
       );
       setFollowersCount(res.data.followersCount ?? 0);
       setFollowingCount(res.data.followingCount ?? 0);
@@ -31,9 +30,8 @@ export default function Follow() {
     setShowModal(true);
 
     try {
-      const res = await axios.get(
-        `http://localhost:3000/api/v1/users/${username}/follow-count`,
-        { withCredentials: true }
+      const res = await api.get(
+        `/users/${username}/follow-count`
       );
       const list =
         title === "Followers" ? res.data.followers : res.data.following;
@@ -51,15 +49,13 @@ export default function Follow() {
   // Handle Accept Request
   const handleAccept = async (targetUsername) => {
     try {
-      await axios.put(
-        `http://localhost:3000/api/v1/users/follow/accept/${targetUsername}`,
-        {},
-        { withCredentials: true }
+      await api.put(
+        `/users/follow/accept/${targetUsername}`,
+        {}
       );
 
-      const res = await axios.get(
-        `http://localhost:3000/api/v1/users/${username}/follow-count`,
-        { withCredentials: true }
+      const res = await api.get(
+        `/users/${username}/follow-count`
       );
       const updatedList =
         modalTitle === "Followers" ? res.data.followers : res.data.following;
@@ -113,8 +109,8 @@ export default function Follow() {
                     {user.status === "following"
                       ? "Following"
                       : user.status === "requested"
-                      ? "Requested"
-                      : "Unknown"}
+                        ? "Requested"
+                        : "Unknown"}
                   </span>
                 )}
               </div>

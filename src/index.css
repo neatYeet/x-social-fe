@@ -16,6 +16,17 @@ body {
   font-size: 20px;
 }
 
+@media (max-width: 991.98px) {
+
+  /* Bootstrap's 'lg' breakpoint for tablets and below */
+  .sidebar {
+    max-height: 100vh;
+    /* Max height of viewport */
+    overflow-y: auto;
+    /* Enable vertical scrolling */
+  }
+}
+
 .sidebar button {
   margin-bottom: 10px;
   border: none;
@@ -27,7 +38,7 @@ body {
 .sidebar .btn-post {
   background-color: white;
   color: black;
-  width: 220px;
+  width: 100%;
   border-radius: 25px;
   height: 50px;
   font-weight: 600;
@@ -44,13 +55,6 @@ body {
   max-width: 320px;
 }
 
-.suggest {
-  /* margin-left: 70%; */
-  /* Removed as Bootstrap grid handles positioning */
-  /* width: 350px; */
-  /* Removed as Bootstrap grid handles width */
-}
-
 .post-text h2 {
   font-size: 15px;
 }
@@ -60,11 +64,6 @@ body {
   color: white !important;
   opacity: 1;
   /* Firefox */
-}
-
-.postcard {
-  /* margin-right: 100px; */
-  /* Removed as Bootstrap grid handles positioning */
 }
 
 .post-action h1 {

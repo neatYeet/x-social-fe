@@ -1,6 +1,6 @@
 import { useState } from "react";
 import imgLogo from "../assets/xlogo.webp";
-import axios from "axios";
+import api from "../utils/api";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 
@@ -16,13 +16,13 @@ export default function FormRegister() {
     e.preventDefault();
 
     try {
-await axios.post("http://localhost:3000/api/v1/auth/register", {
-  username,
-  full_name,
-  password,
-  bio,
-  is_private: isPrivate,
-});
+      await api.post("/auth/register", {
+        username,
+        full_name,
+        password,
+        bio,
+        is_private: isPrivate,
+      });
 
 
       Swal.fire({

@@ -1,6 +1,6 @@
 import { Camera } from "lucide-react";
 import { useState } from "react";
-import axios from "axios";
+import api from "../utils/api";
 import Swal from "sweetalert2";
 
 export default function CreatePost() {
@@ -19,13 +19,13 @@ export default function CreatePost() {
   const handleUpload = async (e) => {
     e.preventDefault();
 
-if (!caption && !file) {
-  return Swal.fire({
-    icon: "warning",
-    title: "Empty Post",
-    text: "Caption or image is required.",
-  });
-}
+    if (!caption && !file) {
+      return Swal.fire({
+        icon: "warning",
+        title: "Empty Post",
+        text: "Caption or image is required.",
+      });
+    }
 
 
     const formData = new FormData();
@@ -33,11 +33,10 @@ if (!caption && !file) {
     if (file) formData.append("file", file); // sesuai backend
 
     try {
-      await axios.post("http://localhost:3000/api/v1/posts", formData, {
+      await api.post("/posts", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
-        withCredentials: true,
       });
 
       Swal.fire({

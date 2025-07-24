@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Calendar, Trash2, Lock, Unlock } from "lucide-react";
 import ProfileAct from "./ProfileAct";
 import Follow from "./Follow";
-import axios from "axios";
+import api from "../utils/api";
 import Cookies from "js-cookie";
 import { Modal, Button, Form } from "react-bootstrap";
 
@@ -15,8 +15,8 @@ const TwitterProfile = () => {
 
   useEffect(() => {
     if (userId) {
-      axios
-        .get("http://localhost:3000/api/v1/user", { withCredentials: true })
+      api
+        .get("/user")
         .then((res) => {
           setProfile(res.data);
           setIsPrivate(res.data.is_private);
@@ -27,8 +27,8 @@ const TwitterProfile = () => {
 
   useEffect(() => {
     if (userId) {
-      axios
-        .get("http://localhost:3000/api/v1/posts", { withCredentials: true })
+      api
+        .get("/posts")
         .then((res) => {
           const userPosts = res.data.filter((post) => post.user_id == userId);
           setPosts(userPosts);
@@ -39,10 +39,8 @@ const TwitterProfile = () => {
 
   const handleDelete = (postId) => {
     if (window.confirm("Are you sure you want to delete this post?")) {
-      axios
-        .delete(`http://localhost:3000/api/v1/posts/${postId}`, {
-          withCredentials: true,
-        })
+      api
+        .delete(`/posts/${postId}`)
         .then(() => {
           setPosts((prevPosts) => prevPosts.filter((post) => post.id !== postId));
         })
@@ -51,11 +49,10 @@ const TwitterProfile = () => {
   };
 
   const handleSavePrivacy = () => {
-    axios
+    api
       .put(
-        "http://localhost:3000/api/v1/user/private",
-        { is_private: isPrivate },
-        { withCredentials: true }
+        "/user/private",
+        { is_private: isPrivate }
       )
       .then(() => {
         setProfile((prev) => ({ ...prev, is_private: isPrivate }));

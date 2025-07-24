@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Calendar } from "lucide-react";
-import axios from "axios";
+import api from "../utils/api";
 import Cookies from "js-cookie";
 import { useParams } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -19,8 +19,8 @@ const UserProfile = () => {
   const [modalTitle, setModalTitle] = useState("");
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:3000/api/v1/users/${username}`)
+    api
+      .get(`/users/${username}`)
       .then((res) => {
         setProfile(res.data);
         fetchFollowStatus(res.data.username);
@@ -31,17 +31,15 @@ const UserProfile = () => {
   }, [username]);
 
   const fetchFollowStatus = (username) => {
-    axios
-      .get(`http://localhost:3000/api/v1/users/${username}/follow-status`, {
-        withCredentials: true,
-      })
+    api
+      .get(`/users/${username}/follow-status`)
       .then((res) => setFollowStatus(res.data.status))
       .catch((err) => console.error(err));
   };
 
   const fetchPosts = (targetUsername) => {
-    axios
-      .get("http://localhost:3000/api/v1/posts", { withCredentials: true })
+    api
+      .get("/posts")
       .then((res) => {
         const filtered = res.data.filter((post) => {
           const postUser = post.user;
@@ -64,10 +62,9 @@ const UserProfile = () => {
 
   const handleFollow = async () => {
     try {
-      await axios.post(
-        `http://localhost:3000/api/v1/users/${username}/follow`,
-        { iduser: currentUserId },
-        { withCredentials: true }
+      await api.post(
+        `/users/${username}/follow`,
+        { iduser: currentUserId }
       );
       fetchFollowStatus(username);
       Swal.fire("Success", `You followed @${username}`, "success");
@@ -78,9 +75,8 @@ const UserProfile = () => {
 
   const handleUnfollow = async () => {
     try {
-      await axios.delete(
-        `http://localhost:3000/api/v1/users/${username}/unfollow`,
-        { withCredentials: true }
+      await api.delete(
+        `/users/${username}/unfollow`
       );
       fetchFollowStatus(username);
     } catch (err) {
@@ -123,9 +119,8 @@ const UserProfile = () => {
 
   const fetchFollowCounts = async () => {
     try {
-      const res = await axios.get(
-        `http://localhost:3000/api/v1/users/${username}/follow-count`,
-        { withCredentials: true }
+      const res = await api.get(
+        `/users/${username}/follow-count`
       );
       setFollowersCount(res.data.followersCount ?? 0);
       setFollowingCount(res.data.followingCount ?? 0);
@@ -139,9 +134,8 @@ const UserProfile = () => {
     setShowModal(true);
 
     try {
-      const res = await axios.get(
-        `http://localhost:3000/api/v1/users/${username}/follow-count`,
-        { withCredentials: true }
+      const res = await api.get(
+        `/users/${username}/follow-count`
       );
       const list =
         title === "Followers" ? res.data.followers : res.data.following;
@@ -172,9 +166,9 @@ const UserProfile = () => {
           Joined{" "}
           {profile.createdAt
             ? new Date(profile.createdAt).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-              })
+              year: "numeric",
+              month: "long",
+            })
             : ""}
         </div>
         <div>

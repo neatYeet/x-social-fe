@@ -17,9 +17,9 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Swal from "sweetalert2";
 import Cookies from "js-cookie";
-import axios from "axios";
+import api from "../utils/api";
 
-export default function Sidebar() {
+export default function Sidebar({ setIsSidebarOpen }) {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -48,12 +48,9 @@ export default function Sidebar() {
     });
   };
 
-  // 🟡 Create Post States
   const [caption, setCaption] = useState("");
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
-  const [homeActive, setHomeActive] = useState(false);
-  const [exploreActive, setExploreActive] = useState(false);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -79,10 +76,7 @@ export default function Sidebar() {
     if (file) formData.append("file", file);
 
     try {
-      await axios.post("http://localhost:3000/api/v1/posts", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-        withCredentials: true,
-      });
+      await api.post("/posts", formData, { headers: { "Content-Type": "multipart/form-data" }, });
 
       Swal.fire({
         icon: "success",
@@ -112,8 +106,8 @@ export default function Sidebar() {
 
   useEffect(() => {
     if (userId) {
-      axios
-        .get("http://localhost:3000/api/v1/user", { withCredentials: true })
+      api
+        .get("/user")
         .then((res) => {
           setProfile(res.data);
         })
@@ -123,26 +117,24 @@ export default function Sidebar() {
     }
   }, [userId]);
 
-  useEffect(() => {
-    if (location.pathname === '/') {
-      setHomeActive(true);
-      console.log('useEffect')
-    } else if (location.pathname === '/explore') {
-      setExploreActive(true);
-    } else {
-      setHomeActive(false);
-      setExploreActive(false);
+
+  const isMobile = () => window.innerWidth < 992;
+
+  const handleNavigation = (path) => {
+    navigate(path);
+    if (isMobile()) {
+      setIsSidebarOpen(false);
     }
-  }, []);
+  };
 
   return (
     <div className="sidebar d-flex flex-column p-1 align-items-start border-end border-dark bg-black">
       <img src={imgLogo} className="w-25 mb-3" alt="Logo" />
 
-      <button onClick={() => navigate("/")} className={homeActive ? activeClass : ''}>
+      <button onClick={() => handleNavigation("/")} className={location.pathname === '/' ? activeClass : ''}>
         <House className="me-2" /> Home
       </button>
-      <button onClick={() => navigate("/explore")} className={exploreActive ? activeClass : ''}>
+      <button onClick={() => handleNavigation("/explore")} className={location.pathname === '/explore' ? activeClass : ''}>
         <Search className="me-2" /> Explore
       </button>
       <button>
@@ -161,8 +153,9 @@ export default function Sidebar() {
         <X className="me-2" /> Premium
       </button>
       <button
+        className={location.pathname === `/profile/${profile.username}` ? activeClass : ''}
         onClick={() =>
-          profile.username && navigate(`/profile/${profile.username}`)
+          profile.username && handleNavigation(`/profile/${profile.username}`)
         }
       >
         <UserRound className="me-2" /> Profile
